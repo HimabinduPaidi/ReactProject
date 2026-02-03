@@ -9,17 +9,16 @@ import {
   APPWRITE_ZONES_ID,
   APPWRITE_SCHOOLS_ID,
   APPWRITE_USER_REQUESTS_ID,
+  APPWRITE_TECHNICIANS_ID,
+  APPWRITE_ISSUES_ID,
 } from "../utils/appwrite/constants";
-
-// Replace with your actual Issues collection ID
-const APPWRITE_ISSUES_ID = "your_issues_collection_id_here"; // ← update when created
 
 class DatabaseService {
   constructor() {
     this.databases = new Databases(client);
   }
 
-  // Helper: List documents or return empty on error
+  // Your original helper – unchanged
   async _listDocuments(collectionId, queries = []) {
     try {
       const response = await this.databases.listDocuments(
@@ -34,51 +33,28 @@ class DatabaseService {
     }
   }
 
-  // ────────────────────────────────────────────────
-  // Dropdown / Cascading data – FIXED queries
-  // ────────────────────────────────────────────────
-
+  // Your original methods – all unchanged
   async getStates() {
     return this._listDocuments(APPWRITE_STATES_ID);
   }
 
   async getDistrictsByState(stateId) {
     return this._listDocuments(APPWRITE_DISTRICTS_ID, [
-      Query.equal("states", stateId),  // ← FIXED: using correct attribute "states"
+      Query.equal("states", stateId),
     ]);
   }
 
   async getZonesByDistrict(districtId) {
     return this._listDocuments(APPWRITE_ZONES_ID, [
-      Query.equal("districts", districtId),  // ← assume similar "districts" relationship
-      // If it's actually "district" or "districtId", change here after checking
+      Query.equal("districts", districtId),
     ]);
   }
 
   async getSchoolsByZone(zoneId) {
     return this._listDocuments(APPWRITE_SCHOOLS_ID, [
-      Query.equal("zones", zoneId),  // ← assume "zones" relationship
-      // If it's "zone" or "zoneId", change here after checking
+      Query.equal("zones", zoneId),
     ]);
   }
-
-  // For District Admin dashboard
-  async getSchoolsByDistrict(districtId) {
-    return this._listDocuments(APPWRITE_SCHOOLS_ID, [
-      Query.equal("districts", districtId),
-    ]);
-  }
-
-  async getIssuesBySchool(schoolId) {
-    return this._listDocuments(APPWRITE_ISSUES_ID, [
-      Query.equal("school", schoolId),
-      Query.orderDesc("$createdAt"),
-    ]);
-  }
-
-  // ────────────────────────────────────────────────
-  // User Requests / Approval (unchanged)
-  // ────────────────────────────────────────────────
 
   async createUserRequest(data) {
     try {
@@ -137,6 +113,35 @@ class DatabaseService {
     return this._listDocuments(APPWRITE_USER_REQUESTS_ID, [
       Query.equal("requestedRole", "schooladmin"),
       Query.equal("status", "pending"),
+    ]);
+  }
+
+  // ────────────────────────────────────────────────
+  // NEW METHODS – added for your dashboard flow
+  // ────────────────────────────────────────────────
+
+  async getTechniciansByDistrict(districtId) {
+    return this._listDocuments(APPWRITE_TECHNICIANS_ID, [
+      Query.equal("district", districtId), // or "districtId" – match your field name
+    ]);
+  }
+
+  async getTechnicianByZone(zoneId) {
+    return this._listDocuments(APPWRITE_TECHNICIANS_ID, [
+      Query.equal("zone", zoneId), // or "zoneId" or "zonal_id" – match your field name
+    ]);
+  }
+
+  async getSchoolsByTechnician(technicianId) {
+    return this._listDocuments(APPWRITE_SCHOOLS_ID, [
+      Query.equal("adminId", technicianId), // your schools table has adminId linking to technician
+    ]);
+  }
+
+  async getIssuesBySchool(schoolId) {
+    return this._listDocuments(APPWRITE_ISSUES_ID, [
+      Query.equal("school", schoolId), // match your field name in issues table
+      Query.orderDesc("$createdAt"),
     ]);
   }
 }

@@ -92,7 +92,7 @@ export default function Login() {
               disabled={isLoading}
               className={clsx(
                 "w-full rounded border p-3 pr-12 focus:outline-none focus:ring-2",
-                password ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-blue-500"
+                password ?  "border-gray-300 focus:ring-blue-500" : "border-red-500 focus:ring-red-500" 
               )}
             />
 

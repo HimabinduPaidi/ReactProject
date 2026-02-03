@@ -1,33 +1,15 @@
-// pages/SuperAdminDashboard.jsx
-import { useEffect, useState } from "react";
-import DatabaseService from "../../appwrite/Database.services";
+// pages/dashboards/SchoolAdmin.jsx
 
-//import  AccountService from "../../appwrite/Account.services";
+// ... your component code ...
 
-export default function TechnicianDashboard() {
-  const [requests, setRequests] = useState([]);
-
-//   useEffect(() => {
-//     loadRequests();
-//   }, []);
-
-//   async function loadRequests() {
-//     const data = await DatabaseService.getdistrictAdminRequests();
-//     setRequests(data);
-//   }
-
-
+function Technician() {
+  // Your component logic here
   return (
-    <div>
-      <h2>Issue Requests</h2>
-
-      {requests.map((req) => (
-        <div key={req.$id} style={{ border: "1px solid #ccc", margin: 10 }}>
-          <p>User ID: {req.userId}</p>
-          <p>State: {req.state}</p>
-          <p>{req.selfIntro}</p>
-        </div>
-      ))}
+    <div className="p-8">
+      <h1 className="text-3xl font-bold">Technician Dashboard</h1>
+      {/* Your content */}
     </div>
   );
 }
+
+export default Technician;  // ← Add or fix this line
