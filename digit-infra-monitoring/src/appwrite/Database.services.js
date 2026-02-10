@@ -198,7 +198,7 @@ class DatabaseService {
         databaseId: APPWRITE_DATABASE_ID,
         tableId: APPWRITE_ISSUES_ID,
         queries: [
-          Query.equal("schoolId", schoolId), // your relationship field is "schools"
+          Query.equal("schoolId", schoolId),
           Query.orderDesc("$createdAt"),
         ],
       });
@@ -211,6 +211,7 @@ class DatabaseService {
 
   async createIssue(data) {
     try {
+      console.log(data);
       return await this.tablesDB.createRow({
         databaseId: APPWRITE_DATABASE_ID,
         tableId: APPWRITE_ISSUES_ID,
@@ -258,6 +259,81 @@ class DatabaseService {
       return null;
     }
   }
+
+  async getIssuesByAssignedTo(technicianId) {
+      try {
+      const res = await this.tablesDB.listRows({
+        databaseId: APPWRITE_DATABASE_ID,
+        tableId: APPWRITE_ISSUES_ID,
+        queries: [
+          Query.equal("assignedTo", technicianId),
+        ],
+      });
+      // console.log("res",res);
+      console.log("issue1: ",res);
+      return res.rows|| null;
+    } catch (err) {
+      console.error("Error fetching Issues by technicianId:", err);
+      return null;
+    }
+  }
+
+  async updateIssueStatus(issueId, newStatus){
+   console.log(issueId);
+   console.log(newStatus);
+   try{
+   await this.tablesDB.updateRow(
+    APPWRITE_DATABASE_ID,
+    APPWRITE_ISSUES_ID,
+    issueId,
+    { status: newStatus }
+);
+   }
+   catch (err){
+    console.log("Error updating the status",err);
+   }
+  }
+  async getDistrictIdByAdmin(districtAdminId) {
+  try {
+    console.log("Fetching district for user ID:", districtAdminId);
+
+    const res = await this.tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: APPWRITE_USER_REQUESTS_ID,
+      queries: [
+        Query.equal("userId", districtAdminId),
+        Query.equal("requestedRole", "districtadmin"),
+        Query.equal("status", "approved"),
+      ],
+    });
+
+    console.log("User requests query result:", res);
+    console.log("Number of approved requests found:", res.rows.length);
+
+    if (res.rows.length === 0) {
+      console.warn("No approved district admin request found for user:", districtAdminId);
+      return null;
+    }
+
+    // Get the district ID from the approved request row
+    const districtId = res.rows[0].district;
+
+    if (!districtId) {
+      console.warn("Approved request found, but no 'district' value:", res.rows[0]);
+      return null;
+    }
+
+    console.log("Found district ID:", districtId);
+    return districtId;
+  } catch (err) {
+    console.error("Error in getDistrictIdByAdmin:", err);
+    return null;
+  }
 }
+}
+// Inside the class DbService { ... }
+
+
+
 
 export default new DatabaseService();

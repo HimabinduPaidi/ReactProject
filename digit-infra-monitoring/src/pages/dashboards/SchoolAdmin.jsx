@@ -12,7 +12,6 @@ export default function SchoolAdmin() {
   const queryClient = useQueryClient();
   // Fetch issues for this school admin's school
   
-  console.log(schoolAdminId);
   const { 
     data: issues = [], 
     isLoading, 
@@ -47,14 +46,23 @@ export default function SchoolAdmin() {
   });
 
   const handleAddIssue = () => {
-
+    console.log("Inside add issue");
     // Get schoolId first (from admin)
-    const schoolId = issues[0]?.schools?.$id; // or fetch separately
-
-
+    console.log("issues",issues);
+    const schoolId = issues[0]?.schoolId;
+    const schoolName = issues[0]?.schoolName; 
+    const assignedTo = issues[0]?.assignedTo;
+    const districtId = issues[0]?.districtId;
+    const zoneId = issues[0]?.zoneId;
+    console.log("schoolId",schoolId);
+    
     createIssueMutation.mutate({
       ...newIssue,
-      schools: schoolId, // relationship field
+      schoolId: schoolId,
+      schoolName: schoolName,
+      assignedTo: assignedTo,
+      districtId: districtId,
+      zoneId: zoneId
     });
 
     setShowAddModal(false);

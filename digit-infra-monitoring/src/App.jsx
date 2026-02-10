@@ -12,11 +12,6 @@ import WaitingApproval from "./pages/WaitingApproval.jsx";
 import ErrorPage from "./pages/ErrorPage.jsx";
 import RequireAuth from "./Components/RequireAuth.jsx";
 
-// New drill-down pages
-import ZoneTechnician from "./pages/dashboards/ZoneTechnician.jsx";
-import ZoneSchools from "./pages/dashboards/ZoneSchools.jsx";
-import SchoolIssues from "./pages/dashboards/SchoolIssues.jsx";
-
 export default function App() {
   const router = createBrowserRouter([
     {
@@ -27,22 +22,18 @@ export default function App() {
         { index: true, element: <Home /> },
         { path: "login", element: <Login /> },
         { path: "register", element: <Register /> },
-        {
-          path: "dashboard",
-          element: <RequireAuth><Outlet /></RequireAuth>,
-          children: [
-            { path: "super-admin", element: <SuperAdmin /> },
-            { path: "state-admin", element: <StateAdmin /> },
-            { path: "district-admin", element: <DistrictAdmin /> },
-            { path: "technician", element: <Technician /> },
-            { path: "school-admin", element: <SchoolAdmin /> },
-
-            // Drill-down for district admin
-            { path: "district-admin/zone/:zoneId/technician", element: <ZoneTechnician /> },
-            { path: "district-admin/zone/:zoneId/schools", element: <ZoneSchools /> },
-            { path: "district-admin/school/:schoolId", element: <SchoolIssues /> },
-          ],
-        },
+        // App.jsx (snippet – replace the dashboard children)
+{
+  path: "dashboard",
+  element: <RequireAuth><Outlet /></RequireAuth>, // ← RequireAuth wraps Outlet
+  children: [
+    { path: "super-admin", element: <SuperAdmin /> },
+    { path: "state-admin", element: <StateAdmin /> },
+    { path: "district-admin", element: <DistrictAdmin /> },
+    { path: "technician", element: <Technician /> },
+    { path: "school-admin", element: <SchoolAdmin /> },
+  ],
+},
       ],
     },
     {

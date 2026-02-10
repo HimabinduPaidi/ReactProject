@@ -170,9 +170,10 @@ export default function Register() {
         const admin = await dbService.getDistrictAdmin(data.district);
         parentAdminId = admin?.userId ?? null;
       }
-
+      console.log("username",user);
       await dbService.createUserRequest({
         userId: user.$id,
+        userName: user.name,
         requestedRole: r,
         parentAdminId,
         selfIntro: data.selfIntro || "",
