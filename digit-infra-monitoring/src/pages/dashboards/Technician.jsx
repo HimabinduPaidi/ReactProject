@@ -7,6 +7,7 @@ import clsx from "clsx";
 export default function Technician() {
   const { user } = useAuthStore();
   const technicianId = user?.$id || null;
+  console.log("technicianId",technicianId);
   const queryClient = useQueryClient();
 
   // Fetch issues assigned to this technician

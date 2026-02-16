@@ -210,6 +210,7 @@ class DatabaseService {
   }
 
   async createIssue(data) {
+    console.log("data",data);
     try {
       console.log(data);
       return await this.tablesDB.createRow({
@@ -225,6 +226,7 @@ class DatabaseService {
   }
 
   async getSchoolIdByAdmin(adminId) {
+    console.log(adminId);
     try {
       const res = await this.tablesDB.listRows({
         databaseId: APPWRITE_DATABASE_ID,
@@ -253,7 +255,7 @@ class DatabaseService {
       });
       // console.log("res",res);
       console.log("schoolName",res.rows[0]["name"]);
-      return res.rows[0]["name"] || null;
+      return res.rows[0] || null;
     } catch (err) {
       console.error("Error fetching schoolName by schoolId:", err);
       return null;
@@ -266,7 +268,7 @@ class DatabaseService {
         databaseId: APPWRITE_DATABASE_ID,
         tableId: APPWRITE_ISSUES_ID,
         queries: [
-          Query.equal("assignedTo", technicianId),
+          Query.equal("technicianId", technicianId),
         ],
       });
       // console.log("res",res);
@@ -330,10 +332,41 @@ class DatabaseService {
     return null;
   }
 }
+
+    async getTechnicianByZone(zoneId){
+      try {
+      const res = await this.tablesDB.listRows({
+        databaseId: APPWRITE_DATABASE_ID,
+        tableId: APPWRITE_USER_REQUESTS_ID,
+        queries: [
+          Query.equal("zone", zoneId),
+          Query.equal("requestedRole", "technician"),
+          Query.equal("status", "approved"),
+        ],
+      });
+       console.log("res",res);
+      console.log("technican",res.rows[0]["userName"]);
+      return res.rows[0] || null;
+    } catch (err) {
+      console.error("Error fetching technicianname:", err);
+      return null;
+    }
+    }
+    async updateIssue(issueId, updatedData) {
+  try {
+    const res = await this.tablesDB.updateRow(
+      APPWRITE_DATABASE_ID,
+      APPWRITE_ISSUES_ID,
+      issueId,
+      updatedData
+    );
+    console.log("Issue updated successfully:", res);
+    return res;
+  } catch (err) {
+    console.error("Error updating issue:", err);
+    throw err;
+  }
+}
 }
 // Inside the class DbService { ... }
-
-
-
-
 export default new DatabaseService();
