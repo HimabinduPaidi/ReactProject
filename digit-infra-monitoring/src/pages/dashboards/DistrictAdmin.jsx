@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import useAuthStore from "../../store/authStore";
 import dbService from "../../appwrite/Database.services";
 import clsx from "clsx";
+import { FiSearch } from "react-icons/fi";
 
 export default function DistrictAdmin() {
   const { user } = useAuthStore();
@@ -273,7 +274,7 @@ export default function DistrictAdmin() {
               text-gray-700 placeholder-gray-400 shadow-sm
             "
           />
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><FiSearch size={18} /></span>
 
           {searchTerm && (
             <button
